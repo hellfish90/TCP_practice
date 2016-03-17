@@ -176,13 +176,13 @@ puts "\n"
 
 
 $tcp0 set tcpTick_ 0.01
-$tcp0 set window_ 40
+$tcp0 set cwnd_ 40
 
 $tcp1 set tcpTick_ 0.01
-$tcp1 set window_ 40
+$tcp1 set cwnd_ 40
 
 $tcp2 set tcpTick_ 0.01
-$tcp2 set window_ 40
+$tcp2 set cwnd_ 40
 
 
 
