@@ -103,7 +103,7 @@ $ns attach-agent $n1 $tcp1
 set cbr1 [new Application/Traffic/CBR]
 $cbr1 set rate_ 0.5Mbps
 $cbr1 attach-agent $tcp1
-$tcp1 set class_ 1
+$tcp1 set class_ 0
 
 
 # Pel node 2; un agent TCP Vegas
@@ -112,7 +112,7 @@ $ns attach-agent $n2 $tcp2
 set cbr2 [new Application/Traffic/CBR]
 $cbr2 set rate_ 0.5Mbps
 $cbr2 attach-agent $tcp2
-$tcp2 set class_ 2
+$tcp2 set class_ 0
 
 # Pel node 4
 set null0 [new Agent/TCPSink]
@@ -129,62 +129,47 @@ $ns connect $tcp1 $null1
 $ns connect $tcp2 $null2
 
 
-set last 0
+
 set iterations 20
 
+for {set k 0} {$k < $iterations} {set k [expr {$k+0.5}]} {
 
-for {set k 0} {$k < $iterations} {incr k } {
+    puts "CBR0 start: $k "
+    $ns at $k "$cbr0 start"
 
-    set next [expr {$k+0.5}]
-
-    $ns at $last "$cbr0 start"
-    $ns at $next "$cbr0 stop"
-    
-    puts "CBR0 init: $last "
-    puts "CBR0 last: $next "
-    
-    set last [expr {$k + 1}]
+    set k [expr {$k + 0.5}]
+    puts "CBR0 stop: $k "
+    $ns at $k "$cbr0 stop"
 
 }
-
+puts "\n"
 
 # A 0s arranquem la font CBR1. Als 1.00s. l'aturem
 
-$ns connect $tcp1 $tcp3
-set last 0
+for {set k 0} {$k < $iterations} {set k [expr {$k+1}]} {
 
-for {set k 0} {$k < $iterations} {incr k} {
+    puts "CBR1 start: $k "
+    $ns at $k "$cbr1 start"
 
-    set next [expr {$k+1}]
+    set k [expr {$k+1}]
+    puts "CBR1 stop: $k "
+    $ns at $k "$cbr1 stop"
 
-    $ns at $last "$cbr1 start"
-    $ns at $next "$cbr1 stop"
-    
-    puts "CBR1 init: $last "
-    puts "CBR1 last: $next "
-    
-    set last [expr {$k + 1}]
 }
-
+puts "\n"
 
 # A 0s arranquem la font CBR2. Als 1.00s. l'aturem
 
-$ns connect $tcp2 $tcp3
-set last 0
+for {set k 0} {$k < $iterations} {set k [expr {$k+2}]} {
 
-for {set k 0} {$k < $iterations} {incr k} {
+    puts "CBR2 start: $k "
+    $ns at $k "$cbr2 start"
 
-    set next [expr {$k+2}]
-
-    $ns at $last "$cbr2 start"
-    $ns at $next "$cbr2 stop"
-    
-    puts "CBR2 init: $last "
-    puts "CBR2 last: $next "
-    
-    set last [expr {$k + 2}]
+    set k [expr {$k+2}]
+    puts "CBR2 stop: $k "
+    $ns at $k "$cbr2 stop"
 }
-
+puts "\n"
 
 # Modifiquem els procediments de control de congestió (slow_start i increment linial)
 # Modifiquem la finestra de congestió màxima
@@ -198,9 +183,6 @@ $tcp1 set window_ 40
 
 $tcp2 set tcpTick_ 0.01
 $tcp2 set window_ 40
-
-$tcp3 set tcpTick_ 0.01
-$tcp3 set window_ 40
 
 
 
