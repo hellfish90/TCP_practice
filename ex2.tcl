@@ -114,13 +114,6 @@ $cbr2 set rate_ 0.5Mbps
 $cbr2 attach-agent $tcp2
 $tcp2 set class_ 2
 
-
-# Pel node 3; un agent TCP 
-set tcp3 [new Agent/TCP]
-$ns attach-agent $n3 $tcp3
-$tcp3 set class_ 3
-
-
 # Pel node 4
 set null0 [new Agent/TCPSink]
 $ns attach-agent $n4 $null0
@@ -135,9 +128,6 @@ $ns connect $tcp0 $null0
 $ns connect $tcp1 $null1
 $ns connect $tcp2 $null2
 
-$ns connect $tcp3 $null0
-$ns connect $tcp3 $null1
-$ns connect $tcp3 $null2
 
 set last 0
 set iterations 20
