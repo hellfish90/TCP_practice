@@ -43,6 +43,8 @@ set nff [open $cwfile  w]
 proc finish {} {
         global ns nf nff tracefile cwfile trailer 
         $ns flush-trace
+
+
 	# Processem "sor.tr" pre obtenir els paquets enviats
 	exec awk {{ if ($1=="-" && $3==1 && $4=2) print $2, 49}}  $tracefile > tx$trailer
 	# Processem "sor.tr" pre obtenir els paquets perduts
@@ -56,12 +58,17 @@ proc finish {} {
 
 # Procediment per gravar els temps del TCP
 proc grava { } {
-	global ns tcp1 nff
-	# ObtÉ la finestra de congestió
-        set cw  [$tcp1 set cwnd_] 
-	set now [$ns now]
-	puts $nff "$now $cw"
+	global ns tcp0 tcp1 tcp2 nff
 
+    set now [$ns now]
+	# ObtÉ la finestra de congestió
+    set cw0  [$tcp0 set cwnd_] 
+    set cw1  [$tcp1 set cwnd_] 
+	set cw2  [$tcp2 set cwnd_] 
+
+    puts $nff "TCP0; $now; $cw1"
+	puts $nff "TCP1; $now; $cw1"
+    puts $nff "TCP2; $now; $cw1"
 	$ns at [expr $now+0.1] "grava"
 }
 
@@ -176,15 +183,16 @@ puts "\n"
 
 
 $tcp0 set tcpTick_ 0.01
-$tcp0 set cwnd_ 40
+$tcp0 set window_ 40
 
 $tcp1 set tcpTick_ 0.01
-$tcp1 set cwnd_ 40
+$tcp1 set window_ 40
 
 $tcp2 set tcpTick_ 0.01
-$tcp2 set cwnd_ 40
+$tcp2 set window_ 40
 
 
+$ns at 0.0 "grava"
 
 # Aturem la simulació als 20 s.
 $ns at 20.0 "finish"
