@@ -66,9 +66,9 @@ proc grava { } {
     set cw1  [$tcp1 set cwnd_] 
 	set cw2  [$tcp2 set cwnd_] 
 
-    puts $nff "TCP0; $now; $cw1"
+    puts $nff "TCP0; $now; $cw0"
 	puts $nff "TCP1; $now; $cw1"
-    puts $nff "TCP2; $now; $cw1"
+    puts $nff "TCP2; $now; $cw2"
 	$ns at [expr $now+0.1] "grava"
 }
 
@@ -110,7 +110,7 @@ $ns attach-agent $n1 $tcp1
 set cbr1 [new Application/Traffic/CBR]
 $cbr1 set rate_ 0.5Mbps
 $cbr1 attach-agent $tcp1
-$tcp1 set class_ 0
+$tcp1 set class_ 1
 
 
 # Pel node 2; un agent TCP Vegas
@@ -119,7 +119,7 @@ $ns attach-agent $n2 $tcp2
 set cbr2 [new Application/Traffic/CBR]
 $cbr2 set rate_ 0.5Mbps
 $cbr2 attach-agent $tcp2
-$tcp2 set class_ 0
+$tcp2 set class_ 2
 
 # Pel node 4
 set null0 [new Agent/TCPSink]
